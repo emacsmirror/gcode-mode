@@ -26,7 +26,7 @@
 ;;; Code:
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.gco\\(?:de\\)?$" . gcode-mode))
+(add-to-list 'auto-mode-alist '("\\.gco\\(?:de\\)?\\'" . gcode-mode))
 
 ;;;###autoload
 (define-derived-mode gcode-mode prog-mode "G-Code"
