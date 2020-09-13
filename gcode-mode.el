@@ -28,6 +28,42 @@
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.gco\\(?:de\\)?\\'" . gcode-mode))
 
+
+;; Documentation handling
+(defvar gcode-mode--doc-hash
+  nil
+  "G-Code documentation table (lazy-loaded).")
+
+(autoload 'gcode-mode--doc-build "gcode-mode-doc.el")
+
+(defun gcode-mode--eldoc (callback)
+  "Lookup current G-Code instruction at point.
+
+Calls CALLBACK with the documentation for the G-Code instruction at point."
+
+  ;; lazily initialize documentation
+  (unless gcode-mode--doc-hash
+    (setq gcode-mode--doc-hash (gcode-mode--doc-build)))
+
+  ;; lookup symbol
+  (save-excursion
+    (beginning-of-line)
+    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
+      (let* ((code (match-string-no-properties 1))
+	     (subtype (match-string-no-properties 2))
+	     (full (concat code subtype))
+	     (doc (gethash full gcode-mode--doc-hash)))
+	(unless doc
+	  ;; attempt to lookup main code if full doesn't exist
+	  (setq doc (gethash code gcode-mode--doc-hash)))
+	(when doc
+	  (funcall callback doc
+		   :thing full
+		   :face 'gcode-mode-gcode-face))))))
+
+
+;; Main code
+
 ;;;###autoload
 (define-derived-mode gcode-mode prog-mode "G-Code"
   "Major mode for G-Code instructions."
@@ -42,7 +78,12 @@
    '(("^\\s-*\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
       (1 font-lock-keyword-face)
       (2 font-lock-type-face) ; Prusa subtype extension
-      ("\\_<[A-Z]" nil nil (0 font-lock-variable-name-face))))))
+      ("\\_<[A-Z]" nil nil (0 font-lock-variable-name-face)))))
+
+  ;; eldoc
+  (if (boundp 'eldoc-documentation-functions) ; Emacs>=28
+      (add-hook 'eldoc-documentation-functions #'gcode-mode--eldoc nil t)
+    (setq-local eldoc-documentation-function #'gcode-mode--eldoc)))
 
 (provide 'gcode-mode)
 
