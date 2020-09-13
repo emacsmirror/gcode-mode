@@ -1,4 +1,4 @@
-;;; gcode-mode.el --- Simple G-Code mode  -*- lexical-binding: t -*-
+;;; gcode-mode.el --- Simple G-Code major mode  -*- lexical-binding: t -*-
 
 ;; Author: Yuri D'Elia <wavexx@thregr.org>
 ;; Version: 0.1
@@ -21,7 +21,13 @@
 ;;; Commentary:
 
 ;; `gcode-mode' performs basic syntax highlighting on G-Code files
-;; (mostly aimed at 3D printers).
+;; (mostly aimed at 3D printers), also providing optional instruction
+;; lookup with ElDoc.
+;;
+;; Once installed, all gcode files automatically open in this mode.
+;; To also automatically enable ElDoc in G-Code files use:
+;;
+;; (add-hook 'gcode-mode-hook 'eldoc-mode)
 
 ;;; Code:
 
