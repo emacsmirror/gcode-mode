@@ -29,6 +29,37 @@
 (add-to-list 'auto-mode-alist '("\\.gco\\(?:de\\)?\\'" . gcode-mode))
 
 
+;; Customizable faces
+(defgroup gcode-mode-faces nil
+  "Faces used in gcode-mode"
+  :group 'faces)
+
+(defface gcode-mode-line-number-face
+  '((t :inherit font-lock-preprocessor-face))
+  "Face used for line numbers"
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-checksum-face
+  '((t :inherit font-lock-preprocessor-face))
+  "Face used for checksums"
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-gcode-face
+  '((t :inherit font-lock-keyword-face))
+  "Face used for main G-Code instructions"
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-gcode-subtype-face
+  '((t :inherit font-lock-type-face))
+  "Face used for G-Code subtypes of the form GX.Y"
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-argument-face
+  '((t :inherit font-lock-variable-name-face))
+  "Face used for G-Code argument names"
+  :group 'gcode-mode-faces)
+
+
 ;; Documentation handling
 (defvar gcode-mode--doc-hash
   nil
@@ -72,13 +103,18 @@ Calls CALLBACK with the documentation for the G-Code instruction at point."
   (modify-syntax-entry ?\; "<")
   (modify-syntax-entry ?\n ">")
 
-  ;; M/G instructions
   (font-lock-add-keywords
    nil
-   '(("^\\s-*\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
-      (1 font-lock-keyword-face)
-      (2 font-lock-type-face) ; Prusa subtype extension
-      ("\\_<[A-Z]" nil nil (0 font-lock-variable-name-face)))))
+   '(;; line numbers
+     ("^\\s-*\\(N[0-9]+\\)\\_>" (1 'gcode-mode-line-number-face))
+     ;; checksums
+     ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
+     ;; M/G instructions
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)"
+      (1 'gcode-mode-gcode-face)
+      (2 'gcode-mode-gcode-subtype-face)
+      ;; arguments
+      ("\\_<[A-Z]" nil nil (0 'gcode-mode-argument-face)))))
 
   ;; eldoc
   (if (boundp 'eldoc-documentation-functions) ; Emacs>=28
