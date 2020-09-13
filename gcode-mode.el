@@ -67,10 +67,8 @@
 
 (autoload 'gcode-mode--doc-build "gcode-mode-doc.el")
 
-(defun gcode-mode--eldoc (callback)
-  "Lookup current G-Code instruction at point.
-
-Calls CALLBACK with the documentation for the G-Code instruction at point."
+(defun gcode-mode--eldoc-core ()
+  "Lookup current G-Code instruction at point."
 
   ;; lazily initialize documentation
   (unless gcode-mode--doc-hash
@@ -88,8 +86,26 @@ Calls CALLBACK with the documentation for the G-Code instruction at point."
 	  ;; attempt to lookup main code if full doesn't exist
 	  (setq doc (gethash code gcode-mode--doc-hash)))
 	(when doc
+	  (cons full doc))))))
+
+(defun gcode-mode--eldoc-compat ()
+  "Lookup current G-Code instruction at point for old versions of eldoc."
+  (let ((ret (gcode-mode--eldoc-core)))
+    (when ret
+      (let ((code (car ret))
+	    (doc (cdr ret)))
+	(concat (propertize code 'face 'gcode-mode-gcode-face)
+		": " doc)))))
+
+(defun gcode-mode--eldoc-function (callback)
+  "Lookup current G-Code instruction at point and call CALLBACK."
+  (when callback
+    (let ((ret (gcode-mode--eldoc-core)))
+      (when ret
+	(let ((code (car ret))
+	      (doc (cdr ret)))
 	  (funcall callback doc
-		   :thing full
+		   :thing code
 		   :face 'gcode-mode-gcode-face))))))
 
 
@@ -118,8 +134,8 @@ Calls CALLBACK with the documentation for the G-Code instruction at point."
 
   ;; eldoc
   (if (boundp 'eldoc-documentation-functions) ; Emacs>=28
-      (add-hook 'eldoc-documentation-functions #'gcode-mode--eldoc nil t)
-    (setq-local eldoc-documentation-function #'gcode-mode--eldoc)))
+      (add-hook 'eldoc-documentation-functions #'gcode-mode--eldoc-function nil t)
+    (setq-local eldoc-documentation-function #'gcode-mode--eldoc-compat)))
 
 (provide 'gcode-mode)
 
