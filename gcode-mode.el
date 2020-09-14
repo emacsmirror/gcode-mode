@@ -92,6 +92,7 @@
 	  ;; attempt to lookup main code if full doesn't exist
 	  (setq doc (gethash code gcode-mode--doc-hash)))
 	(when doc
+	  (setq doc (mapconcat #'identity doc " | "))
 	  (cons full doc))))))
 
 (defun gcode-mode--eldoc-compat ()
