@@ -83,9 +83,9 @@
   ;; lookup symbol
   (save-excursion
     (beginning-of-line)
-    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
-      (let* ((code (match-string-no-properties 1))
-	     (subtype (match-string-no-properties 2))
+    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
+      (let* ((code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
+	     (subtype (match-string-no-properties 3))
 	     (full (concat code subtype))
 	     (doc (gethash full gcode-mode--doc-hash)))
 	(unless doc
