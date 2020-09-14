@@ -51,8 +51,13 @@
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-gcode-face
-  '((t :inherit font-lock-keyword-face))
+  '((t :inherit font-lock-builtin-face))
   "Face used for main G-Code instructions"
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-mcode-face
+  '((t :inherit font-lock-keyword-face))
+  "Face used for main M-Code instructions"
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-gcode-subtype-face
@@ -133,8 +138,10 @@
      ("^\\s-*\\(N[0-9]+\\)\\_>" (1 'gcode-mode-line-number-face))
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
-     ;; G/M/T/D instructions
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
+     ;; MTD instructions
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MTD]-?[0-9]+\\)\\_>" (1 'gcode-mode-mcode-face))
+     ;; G instructions + subtype
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\(G-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
       (1 'gcode-mode-gcode-face)
       (2 'gcode-mode-gcode-subtype-face)
       ;; arguments
