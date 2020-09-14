@@ -83,7 +83,7 @@
   ;; lookup symbol
   (save-excursion
     (beginning-of-line)
-    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
+    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
       (let* ((code (match-string-no-properties 1))
 	     (subtype (match-string-no-properties 2))
 	     (full (concat code subtype))
@@ -131,8 +131,8 @@
      ("^\\s-*\\(N[0-9]+\\)\\_>" (1 'gcode-mode-line-number-face))
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
-     ;; M/G instructions
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MG][0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)"
+     ;; G/M/T/D instructions
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)"
       (1 'gcode-mode-gcode-face)
       (2 'gcode-mode-gcode-subtype-face)
       ;; arguments
