@@ -86,14 +86,15 @@
     (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>")
       (let* ((code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
 	     (subtype (replace-regexp-in-string "0+$" "" (match-string-no-properties 3)))
-	     (full (concat code subtype))
-	     (doc (gethash full gcode-mode--doc-hash)))
+	     (instr (concat code subtype))
+	     (doc (gethash instr gcode-mode--doc-hash)))
 	(unless doc
-	  ;; attempt to lookup main code if full doesn't exist
-	  (setq doc (gethash code gcode-mode--doc-hash)))
+	  ;; attempt to lookup main code if instr doesn't exist
+	  (setq doc (gethash code gcode-mode--doc-hash)
+		instr code))
 	(when doc
 	  (setq doc (mapconcat #'identity doc " | "))
-	  (cons full doc))))))
+	  (cons instr doc))))))
 
 (defun gcode-mode--eldoc-compat ()
   "Lookup current G-Code instruction at point for old versions of eldoc."
