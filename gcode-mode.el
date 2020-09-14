@@ -133,7 +133,7 @@
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
      ;; G/M/T/D instructions
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)"
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
       (1 'gcode-mode-gcode-face)
       (2 'gcode-mode-gcode-subtype-face)
       ;; arguments
