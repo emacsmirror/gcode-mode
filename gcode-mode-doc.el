@@ -12,6 +12,8 @@
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
 
+;;; Commentary:
+
 ;; This file has been bootstrapped by reading descriptions
 ;; from the RepRap Wiki:
 ;;
@@ -20,10 +22,13 @@
 ;; See "bootstrap-doc.sh" for the *rough* script used to extract the
 ;; basic descriptions. The resulting entries were then hand-edited.
 
+
 ;;; Code:
 
+(require 'cl-lib)
+
 (defun gcode-mode--doc-build ()
-  "Generate G-Code documentation entries"
+  "Generate G-Code documentation entries."
   (let ((hash (make-hash-table :test 'equal)))
     (cl-flet ((gcodedef (code def)
 			(let ((def-list (gethash code hash)))

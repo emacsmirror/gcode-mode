@@ -3,7 +3,7 @@
 ;; Author: Yuri D'Elia <wavexx@thregr.org>
 ;; Version: 0.1
 ;; URL: https://gitlab.com/wavexx/gcode-mode.el
-;; Package-Requires: ((emacs "24.4"))
+;; Package-Requires: ((emacs "24.4") (cl-lib "0.5"))
 ;; Keywords: gcode, languages, highlight, syntax
 
 ;; This file is NOT part of GNU Emacs.
