@@ -138,11 +138,11 @@
      ("^\\s-*\\(N[0-9]+\\)\\_>" (1 'gcode-mode-line-number-face))
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
-     ;; MTD instructions
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([MTD]-?[0-9]+\\)\\_>" (1 'gcode-mode-mcode-face))
-     ;; G instructions + subtype
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\(G-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
-      (1 'gcode-mode-gcode-face)
+     ;; instructions + subtype
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
+      (1 (if (string-prefix-p "M" (match-string-no-properties 1))
+	     'gcode-mode-mcode-face
+	   'gcode-mode-gcode-face))
       (2 'gcode-mode-gcode-subtype-face)
       ;; arguments
       ("\\_<[A-Z]" nil nil (0 'gcode-mode-argument-face)))))
