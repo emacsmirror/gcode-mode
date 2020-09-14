@@ -26,7 +26,7 @@
   "Generate G-Code documentation entries"
   (let ((hash (make-hash-table :test 'equal)))
     (cl-flet ((gcodedef (code def)
-			(let ((def-list (or (gethash code hash) '())))
+			(let ((def-list (gethash code hash)))
 			  (push def def-list)
 			  (puthash code def-list hash))))
       (gcodedef "G0" "Move")
