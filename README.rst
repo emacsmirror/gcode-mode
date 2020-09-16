@@ -12,6 +12,9 @@ To also automatically enable ElDoc in G-Code files use:
 
   (add-hook 'gcode-mode-hook 'eldoc-mode)
 
+ElDoc will provide brief descriptions of the current instruction at
+point.
+
 This package is fully documented in the source and maintained through MELPA:
 
 https://melpa.org/#/gcode-mode
