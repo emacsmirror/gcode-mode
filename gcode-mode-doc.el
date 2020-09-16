@@ -1,4 +1,4 @@
-;;; gcode-mode-eldoc.el --- G-Code documentation entries  -*- lexical-binding: t -*-
+;;; gcode-mode-doc.el --- G-Code documentation entries  -*- lexical-binding: t -*-
 
 ;; This file is NOT part of GNU Emacs.
 
