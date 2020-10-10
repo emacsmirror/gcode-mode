@@ -136,9 +136,9 @@
   (let ((ret (gcode-mode--eldoc-core)))
     (when ret
       (let* ((doc (car ret))
-	     (attr (cdr ret))
-	     (thing (plist-get attr :thing))
-	     (face (plist-get attr :face)))
+	     (attrs (cdr ret))
+	     (thing (plist-get attrs :thing))
+	     (face (plist-get attrs :face)))
 	(concat (propertize thing 'face face) ": " doc)))))
 
 (defun gcode-mode--eldoc-function (callback)
