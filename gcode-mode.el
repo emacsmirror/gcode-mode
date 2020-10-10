@@ -86,6 +86,17 @@
 
 (autoload 'gcode-mode--doc-build "gcode-mode-doc.el")
 
+(defun gcode-mode--doc-format (instr entries)
+  "Format the retrieved documentation entry/es for display."
+  (mapconcat #'identity entries " | "))
+
+(defun gcode-mode--instr-face (instr)
+  "Return the appropriate face for the current G-Code instruction."
+  (let ((code (string-to-char instr)))
+    (cond ((equal ?M code) 'gcode-mode-mcode-face)
+	  ((equal ?D code) 'gcode-mode-dcode-face)
+	  (t 'gcode-mode-gcode-face))))
+
 (defun gcode-mode--eldoc-core ()
   "Lookup current G-Code instruction at point."
 
@@ -98,36 +109,35 @@
     (beginning-of-line)
     (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
       (let* ((code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
+	     (face (gcode-mode--instr-face code))
 	     (subtype (replace-regexp-in-string "0+$" "" (or (match-string-no-properties 3) "")))
 	     (instr (concat code subtype))
-	     (doc (gethash instr gcode-mode--doc-hash)))
-	(unless doc
+	     (entries (gethash instr gcode-mode--doc-hash)))
+	(unless entries
 	  ;; attempt to lookup main code if instr doesn't exist
-	  (setq doc (gethash code gcode-mode--doc-hash)
+	  (setq entries (gethash code gcode-mode--doc-hash)
 		instr code))
-	(when doc
-	  (setq doc (mapconcat #'identity doc " | "))
-	  (cons instr doc))))))
+	(when entries
+	  ;; return final documentation
+	  (list (gcode-mode--doc-format instr entries)
+		:thing instr :face face))))))
 
 (defun gcode-mode--eldoc-compat ()
   "Lookup current G-Code instruction at point for old versions of eldoc."
   (let ((ret (gcode-mode--eldoc-core)))
     (when ret
-      (let ((code (car ret))
-	    (doc (cdr ret)))
-	(concat (propertize code 'face 'gcode-mode-gcode-face)
-		": " doc)))))
+      (let* ((doc (car ret))
+	     (attr (cdr ret))
+	     (thing (plist-get attr :thing))
+	     (face (plist-get attr :face)))
+	(concat (propertize thing 'face face) ": " doc)))))
 
 (defun gcode-mode--eldoc-function (callback)
   "Lookup current G-Code instruction at point and call CALLBACK."
   (when callback
     (let ((ret (gcode-mode--eldoc-core)))
       (when ret
-	(let ((code (car ret))
-	      (doc (cdr ret)))
-	  (funcall callback doc
-		   :thing code
-		   :face 'gcode-mode-gcode-face))))))
+	(apply callback ret)))))
 
 
 ;; Main code
@@ -148,10 +158,7 @@
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
      ;; instructions + subtype
      ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\(\\.[0-9]*\\)?\\)\\_>"
-      (1 (let ((code (string-to-char (match-string-no-properties 1))))
-	   (cond ((equal ?M code) 'gcode-mode-mcode-face)
-		 ((equal ?D code) 'gcode-mode-dcode-face)
-		 (t 'gcode-mode-gcode-face))))
+      (1 (gcode-mode--instr-face (match-string-no-properties 1)))
       (2 'gcode-mode-subtype-face prepend t)
       ;; arguments
       ("\\_<[A-Z]" nil nil (0 'gcode-mode-argument-face)))))
