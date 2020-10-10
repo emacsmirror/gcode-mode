@@ -63,6 +63,11 @@
   "Face used for main M-Code instructions"
   :group 'gcode-mode-faces)
 
+(defface gcode-mode-dcode-face
+  '((t :inherit font-lock-keyword-face))
+  "Face used for main D-Code instructions"
+  :group 'gcode-mode-faces)
+
 (defface gcode-mode-gcode-subtype-face
   '((t :inherit font-lock-type-face))
   "Face used for G-Code subtypes of the form GX.Y"
@@ -143,9 +148,10 @@
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
      ;; instructions + subtype
      ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
-      (1 (if (string-prefix-p "M" (match-string-no-properties 1))
-	     'gcode-mode-mcode-face
-	   'gcode-mode-gcode-face))
+      (1 (let ((code (string-to-char (match-string-no-properties 1))))
+	   (cond ((equal ?M code) 'gcode-mode-mcode-face)
+		 ((equal ?D code) 'gcode-mode-dcode-face)
+		 (t 'gcode-mode-gcode-face))))
       (2 'gcode-mode-gcode-subtype-face)
       ;; arguments
       ("\\_<[A-Z]" nil nil (0 'gcode-mode-argument-face)))))
