@@ -111,7 +111,6 @@
       (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
 	(let* ((args-pos (match-end 0))
 	       (code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
-	       (face (gcode-mode--instr-face code))
 	       (subtype (replace-regexp-in-string "0+$" "" (or (match-string-no-properties 3) "")))
 	       (instr (concat code subtype))
 	       (entries (gethash instr gcode-mode--doc-hash)))
@@ -120,8 +119,9 @@
 	    (setq entries (gethash code gcode-mode--doc-hash)
 		  instr code))
 	  (when entries
-	    ;; fetch current parameter
-	    (let ((param))
+	    (let ((face (gcode-mode--instr-face code))
+		  (param))
+	      ;; fetch current parameter
 	      (goto-char pos)
 	      (when (and (> pos args-pos)
 			 (not (nth 4 (syntax-ppss)))
