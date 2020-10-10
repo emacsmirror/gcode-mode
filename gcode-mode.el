@@ -86,7 +86,7 @@
 
 (autoload 'gcode-mode--doc-build "gcode-mode-doc.el")
 
-(defun gcode-mode--doc-format (instr entries)
+(defun gcode-mode--doc-format (instr entries param)
   "Format the retrieved documentation entry/es for display."
   (mapconcat #'identity entries " | "))
 
@@ -106,21 +106,30 @@
 
   ;; lookup symbol
   (save-excursion
-    (beginning-of-line)
-    (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
-      (let* ((code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
-	     (face (gcode-mode--instr-face code))
-	     (subtype (replace-regexp-in-string "0+$" "" (or (match-string-no-properties 3) "")))
-	     (instr (concat code subtype))
-	     (entries (gethash instr gcode-mode--doc-hash)))
-	(unless entries
-	  ;; attempt to lookup main code if instr doesn't exist
-	  (setq entries (gethash code gcode-mode--doc-hash)
-		instr code))
-	(when entries
-	  ;; return final documentation
-	  (list (gcode-mode--doc-format instr entries)
-		:thing instr :face face))))))
+    (let ((pos (point)))
+      (beginning-of-line)
+      (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
+	(let* ((args-pos (match-end 0))
+	       (code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
+	       (face (gcode-mode--instr-face code))
+	       (subtype (replace-regexp-in-string "0+$" "" (or (match-string-no-properties 3) "")))
+	       (instr (concat code subtype))
+	       (entries (gethash instr gcode-mode--doc-hash)))
+	  (unless entries
+	    ;; attempt to lookup main code if instr doesn't exist
+	    (setq entries (gethash code gcode-mode--doc-hash)
+		  instr code))
+	  (when entries
+	    ;; fetch current parameter
+	    (let ((param))
+	      (goto-char pos)
+	      (when (and (> pos args-pos)
+			 (not (nth 4 (syntax-ppss)))
+			 (looking-back "\\_<\\([A-Z]\\)\\S-*" args-pos))
+		(setq param (match-string-no-properties 1)))
+	      ;; return final documentation
+	      (list (gcode-mode--doc-format instr entries param)
+		    :thing instr :face face))))))))
 
 (defun gcode-mode--eldoc-compat ()
   "Lookup current G-Code instruction at point for old versions of eldoc."
