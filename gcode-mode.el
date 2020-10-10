@@ -3,7 +3,7 @@
 ;; Author: Yuri D'Elia <wavexx@thregr.org>
 ;; Version: 0.1
 ;; URL: https://gitlab.com/wavexx/gcode-mode.el
-;; Package-Requires: ((emacs "24.4") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "24.4"))
 ;; Keywords: gcode, languages, highlight, syntax
 
 ;; This file is NOT part of GNU Emacs.
@@ -79,19 +79,33 @@
   :group 'gcode-mode-faces)
 
 
-;; Documentation handling
-(defvar gcode-mode--doc-hash
-  nil
-  "G-Code documentation table (lazy-loaded).")
+;; Documentation table generation
+(autoload 'gcode-mode--doc-entries "gcode-mode-doc"
+  "Return G-Code documentation entries.")
 
-(autoload 'gcode-mode--doc-build "gcode-mode-doc.el")
+(defvar gcode-mode--doc-hash nil
+  "G-Code documentation table (lazy-built by `gcode-mode--doc-build').")
 
+(defun gcode-mode--doc-build ()
+  "Populate G-Code documentation hash table."
+  (unless gcode-mode--doc-hash
+    (let ((hash (make-hash-table :test 'equal)))
+      (dolist (entry (gcode-mode--doc-entries))
+	(let ((code (car entry))
+	      (def (cdr entry)))
+	  (let ((def-list (gethash code hash)))
+	    (push def def-list)
+	    (puthash code def-list hash))))
+      (setq gcode-mode--doc-hash hash))))
+
+
+;; Documentation formatting
 (defun gcode-mode--doc-format (instr entries param)
   "Format the retrieved documentation entry/es for display."
   (mapconcat #'identity entries " | "))
 
 (defun gcode-mode--instr-face (instr)
-  "Return the appropriate face for the current G-Code instruction."
+  "Return the appropriate face for the current G-Code instruction INSTR."
   (let ((code (string-to-char instr)))
     (cond ((equal ?M code) 'gcode-mode-mcode-face)
 	  ((equal ?D code) 'gcode-mode-dcode-face)
@@ -99,12 +113,6 @@
 
 (defun gcode-mode--eldoc-core ()
   "Lookup current G-Code instruction at point."
-
-  ;; lazily initialize documentation
-  (unless gcode-mode--doc-hash
-    (setq gcode-mode--doc-hash (gcode-mode--doc-build)))
-
-  ;; lookup symbol
   (save-excursion
     (let ((pos (point)))
       (beginning-of-line)
@@ -133,6 +141,7 @@
 
 (defun gcode-mode--eldoc-compat ()
   "Lookup current G-Code instruction at point for old versions of eldoc."
+  (gcode-mode--doc-build)
   (let ((ret (gcode-mode--eldoc-core)))
     (when ret
       (let* ((doc (car ret))
@@ -143,6 +152,7 @@
 
 (defun gcode-mode--eldoc-function (callback)
   "Lookup current G-Code instruction at point and call CALLBACK."
+  (gcode-mode--doc-build) ; TODO: this can/should be async
   (when callback
     (let ((ret (gcode-mode--eldoc-core)))
       (when ret
