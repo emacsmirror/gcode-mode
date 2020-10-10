@@ -68,9 +68,9 @@
   "Face used for main D-Code instructions"
   :group 'gcode-mode-faces)
 
-(defface gcode-mode-gcode-subtype-face
-  '((t :inherit font-lock-type-face))
-  "Face used for G-Code subtypes of the form GX.Y"
+(defface gcode-mode-subtype-face
+  '((t :weight bold))
+  "Face used for highlighting subtypes of the form GX.Y"
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-argument-face
@@ -147,12 +147,12 @@
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
      ;; instructions + subtype
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\)\\(\\(?:\\.[0-9]*\\)?\\)\\_>"
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\(\\.[0-9]*\\)?\\)\\_>"
       (1 (let ((code (string-to-char (match-string-no-properties 1))))
 	   (cond ((equal ?M code) 'gcode-mode-mcode-face)
 		 ((equal ?D code) 'gcode-mode-dcode-face)
 		 (t 'gcode-mode-gcode-face))))
-      (2 'gcode-mode-gcode-subtype-face)
+      (2 'gcode-mode-subtype-face prepend t)
       ;; arguments
       ("\\_<[A-Z]" nil nil (0 'gcode-mode-argument-face)))))
 
