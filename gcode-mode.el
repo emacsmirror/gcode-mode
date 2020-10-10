@@ -64,7 +64,7 @@
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-dcode-face
-  '((t :inherit font-lock-keyword-face))
+  '((t :inherit font-lock-warning-face))
   "Face used for main D-Code instructions"
   :group 'gcode-mode-faces)
 
