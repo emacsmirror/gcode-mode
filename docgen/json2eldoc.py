@@ -36,7 +36,7 @@ def output_eldoc(entries):
         line = '  ('
         line += escape_estr(entry['code'])
         line += ' '
-        line += escape_estr(entry['title'])
+        line += escape_estr(entry['title'].rstrip(' .\t\n'))
 
         if entry['params']:
             for k, v in sorted(entry['params'].items()):
@@ -44,8 +44,8 @@ def output_eldoc(entries):
                 line += '?' + k[0]
                 line += ' '
                 if v is not None:
-                    # take first line of description only
-                    v = v.split('\n')[0].rstrip('.')
+                    # take first line/sentence of description only
+                    v = v.split('\n', 1)[0].split('. ', 1)[0].rstrip(' .\t\n')
                 line += escape_estr(v)
 
         line += ')'
