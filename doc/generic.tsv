@@ -302,7 +302,7 @@ M410	Quick-Stop
 M412	Disable Filament Runout Detection
 M413	Power-Loss Recovery
 M415	Host Rescue
-M416	Power loss 
+M416	Power loss
 M420	Set RGB Colors as PWM (MachineKit)
 M420	Leveling On/Off/Fade (Marlin)
 M421	Set a Mesh Bed Leveling Z coordinate
