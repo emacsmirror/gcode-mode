@@ -13,8 +13,12 @@ To also automatically enable ElDoc in G-Code files use:
   (add-hook 'gcode-mode-hook 'eldoc-mode)
 
 ElDoc will provide brief descriptions of the current instruction at
-point.
+point. Embedded documentation is provided thanks to both the `RepRap
+Wiki`_ and the `Marlin Documentation`_ projects.
 
 This package is fully documented in the source and maintained through MELPA:
 
 https://melpa.org/#/gcode-mode
+
+.. _RepRap Wiki: https://reprap.org/wiki/G-code
+.. _Marlin Documentation: https://github.com/MarlinFirmware/MarlinDocumentation/
