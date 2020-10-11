@@ -18,7 +18,7 @@ def ht2text(html):
     text = text.replace('&quot;', '"')
     text = text.replace('&amp;', '&')
 
-    return text.strip()
+    return text
 
 
 class PlainTextRenderer(mistune.AstRenderer):
