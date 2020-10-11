@@ -116,11 +116,13 @@ def parse_entry(path):
     if ret.get('parameters') is None:
         ret['parameters'] = []
 
-    # fixup codes with parameters
+    # kill codes with parameters
     for code in ret['codes']:
         if ' ' in code:
             print('warning: {} contains broken code "{}", ignoring'.format(path, code), file=sys.stderr)
-            return None
+            ret['codes'].remove(code)
+    if len(ret['codes']) == 0:
+        return None
 
     # add some custom tags
     if 'flavour' not in ret:
