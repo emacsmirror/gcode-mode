@@ -89,12 +89,20 @@ def md2text(text):
     return '\n\n'.join(ret)
 
 
-def md2text_dict(data):
-    for k, v in data.items():
-        if isinstance(v, dict):
-            data[k] = md2text_dict(v)
-        elif isinstance(v, str):
-            data[k] = md2text(v)
+def md2text_deep(data):
+    if isinstance(data, dict):
+        for k, v in data.items():
+            if isinstance(v, (dict, list)):
+                data[k] = md2text_deep(v)
+            elif isinstance(v, str):
+                data[k] = md2text(v)
+    elif isinstance(data, list):
+        for i, e in enumerate(data):
+            if isinstance(e, (dict, list)):
+                data[i] = md2text_deep(e)
+            elif isinstance(e, str):
+                data[i] = md2text(e)
+    return data
 
 
 ## Marlin documentation entry
@@ -116,7 +124,7 @@ def parse_entry(path):
 
     # parse the YAML data block
     ret = yaml.safe_load(data)
-    md2text_dict(ret)
+    ret = md2text_deep(ret)
 
     # fixup parameters to always be a list
     if ret.get('parameters') is None:
