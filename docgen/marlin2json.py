@@ -139,8 +139,8 @@ def parse_entry(path):
         return None
 
     # add some custom tags
-    if 'flavour' not in ret:
-        ret['flavour'] = 'Marlin'
+    if 'flavor' not in ret:
+        ret['flavor'] = 'Marlin'
 
     return {'data': ret,
             'desc': md2text(desc)}
