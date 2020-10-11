@@ -5,6 +5,7 @@ import html2text
 import yaml
 import json
 import sys
+import re
 
 
 ## HTML/Markdown handling
@@ -132,8 +133,8 @@ def parse_entry(path):
 
     # kill codes with parameters
     for code in ret['codes']:
-        if ' ' in code:
-            print('warning: {} contains broken code "{}", ignoring'.format(path, code), file=sys.stderr)
+        if not re.match(r'^[A-Z]-?0*\d+(?:\.\d+)?$', code):
+            print('warning: {} contains unsupported code "{}", ignoring'.format(path, code), file=sys.stderr)
             ret['codes'].remove(code)
     if len(ret['codes']) == 0:
         return None
