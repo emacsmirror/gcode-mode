@@ -100,9 +100,31 @@
 
 
 ;; Documentation formatting
-(defun gcode-mode--doc-format (instr entries param)
+(defun gcode-mode--params-list (params)
+  (when params
+    (cons (car params) (gcode-mode--params-list (cddr params)))))
+
+(defun gcode-mode--doc-format (_instr entries param)
   "Format the retrieved documentation entry/es for display."
-  (mapconcat #'identity entries " | "))
+  (let ((entry (first entries))) ; TODO: display/select multiple candidates
+    (let* ((title (first entry))
+	   (params (rest entry))
+	   (param-desc (when param (plist-get params (string-to-char param))))
+	   (param-list (unless param-desc (gcode-mode--params-list params))))
+      (let ((docstring title))
+	(when param-list
+	  (setq docstring
+		(concat docstring " ["
+			(propertize
+			 (concat param-list)
+			 'face 'gcode-mode-argument-face)
+			"]")))
+	(when param-desc
+	  (setq docstring
+		(concat docstring " "
+			(propertize param 'face 'gcode-mode-argument-face)
+			": " param-desc)))
+	docstring))))
 
 (defun gcode-mode--instr-face (instr)
   "Return the appropriate face for the current G-Code instruction INSTR."

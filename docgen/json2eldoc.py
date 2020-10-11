@@ -22,7 +22,10 @@ def normalize_json(data):
 
 
 def escape_estr(string):
-    return '"' + string.replace('\\', '\\\\').replace('"', '\\"') + '"'
+    if string is None:
+        return 'nil'
+    else:
+        return '"' + string.replace('\\', '\\\\').replace('"', '\\"') + '"'
 
 def output_eldoc(entries):
     print(''';;; gcode-mode-doc.el --- G-Code documentation entries  -*- lexical-binding: t -*-
@@ -32,8 +35,19 @@ def output_eldoc(entries):
     for entry in entries:
         line = '  ('
         line += escape_estr(entry['code'])
-        line += ' . '
+        line += ' '
         line += escape_estr(entry['title'])
+
+        if entry['params']:
+            for k, v in sorted(entry['params'].items()):
+                line += ' '
+                line += '?' + k[0]
+                line += ' '
+                if v is not None:
+                    # take first line of description only
+                    v = v.split('\n')[0].rstrip('.')
+                line += escape_estr(v)
+
         line += ')'
         print(line)
     print('))')
