@@ -56,7 +56,7 @@ documentation into `gcode-mode-doc.el` automatically::
   ln -s /path/to/MarlinDocumentation/_gcode .
   ./generate.sh
 
-Updating the RepRap descriptions harder. Run::
+Updating the RepRap descriptions is harder. Run::
 
   ./reprap2tsv.sh > ../doc/generic-new.tsv
 
