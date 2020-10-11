@@ -137,18 +137,22 @@ def parse_entry(path):
             print('warning: {} containts empty parameter node'.format(path), file=sys.stderr)
             ret['parameters'] = filtered
 
-        # fixup tag to always be a list like 'codes'
         for param in filtered:
+            # fixup tag/s to always be a list like 'codes'
             if isinstance(param['tag'], str):
                 tag = param['tag']
                 tags = list(map(lambda x: x.strip(), re.split(r'[\s,]+', tag)))
                 if len(tags) != 1:
                     print('warning: {} unpacking multiple parameters "{}" into {}'.format(path, tag, tags), file=sys.stderr)
                 param['tag'] = tags
+
+            # check tag lenght
             for tag in param['tag']:
                 if len(tag) != 1:
                     print('warning: {} unsupported parameter "{}", ignoring'.format(path, tag), file=sys.stderr)
                     param['tag'].remove(tag)
+
+            # check tag case
             for i, e in enumerate(param['tag']):
                 e = e.upper()
                 if e != param['tag'][i]:
