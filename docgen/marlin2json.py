@@ -41,10 +41,16 @@ class PlainTextRenderer(mistune.AstRenderer):
     def block_code(self, text):
         return ''.join(text)
 
+    def block_quote(self, text):
+        return ''.join(text)
+
     def codespan(self, text):
         return ''.join(text)
 
     def newline(self):
+        return '\n'
+
+    def linebreak(self):
         return '\n'
 
     def emphasis(self, text):
