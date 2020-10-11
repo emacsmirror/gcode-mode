@@ -16,7 +16,7 @@ ElDoc will provide brief descriptions of the current instruction at
 point. Embedded documentation is provided thanks to both the `RepRap
 Wiki`_ and the `Marlin Documentation`_ projects.
 
-Look at the `<docgen/>`_ for some documentation about the extraction and
+Look at `<docgen/>`_ for some documentation about the extraction and
 processing of docstrings.
 
 This package is fully documented in the source and maintained through MELPA:
