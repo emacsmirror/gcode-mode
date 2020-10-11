@@ -438,7 +438,7 @@
   ("M909" "DAC Print Values")
   ("M910" "Commit DAC to EEPROM")
   ("M911" "TMC OT Pre-Warn Condition")
-  ("M912" "Clear TMC OT Pre-Warn" ?E "Clear all or one E stepper driver Over Temperature Pre-warn flag" ?I "Stepper number to set" ?X "Clear X and/or X2 stepper driver Over Temperature Pre-warn flag" ?Y "Clear Y and/or Y2 stepper driver Over Temperature Pre-warn flag" ?Z "Clear Z and/or Z2  and/or Z3 stepper driver Over Temperature Pre-warn flag")
+  ("M912" "Clear TMC OT Pre-Warn" ?E "Clear all or one E stepper driver Over Temperature Pre-warn flag" ?I "Stepper number to set" ?X "Clear X and/or X2 stepper driver Over Temperature Pre-warn flag" ?Y "Clear Y and/or Y2 stepper driver Over Temperature Pre-warn flag" ?Z "Clear Z and/or Z2 and/or Z3 stepper driver Over Temperature Pre-warn flag")
   ("M913" "Set Hybrid Threshold Speed" ?E "Set E0_HYBRID_THRESHOLD and E1_HYBRID_THRESHOLD and E2_HYBRID_THRESHOLD and E3_HYBRID_THRESHOLD to the provided value" ?I "(>=1.1.9) Index for dual steppers" ?T "(>=1.1.9) Index (tool) number for the E axis" ?X "Set X_HYBRID_THRESHOLD and X2_HYBRID_THRESHOLD to the provided value" ?Y "Set Y_HYBRID_THRESHOLD and Y2_HYBRID_THRESHOLD to the provided value" ?Z "Set Z_HYBRID_THRESHOLD and Z2_HYBRID_THRESHOLD to the provided value")
   ("M914" "TMC Bump Sensitivity" ?I "(>=1.1.9) Index for dual steppers" ?X "Sensitivity of the X stepper driver" ?Y "Sensitivity of the Y stepper driver" ?Z "Sensitivity of the Z stepper driver")
   ("M915" "TMC Z axis calibration" ?S "Current value to use for the raise move" ?Z "Extra distance past Z_MAX_POS to move the Z axis")

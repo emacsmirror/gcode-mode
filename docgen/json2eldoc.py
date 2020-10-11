@@ -2,6 +2,7 @@
 import collections
 import argparse
 import json
+import re
 
 
 def normalize_json(data):
@@ -21,6 +22,9 @@ def normalize_json(data):
     return ret
 
 
+def clean_str(string):
+    return re.sub(r'([\s])+', r'\1', string).strip(' .\t\n')
+
 def escape_estr(string):
     if string is None:
         return 'nil'
@@ -34,9 +38,9 @@ def output_eldoc(entries):
 (defun gcode-mode--doc-entries () '(''')
     for entry in entries:
         line = '  ('
-        line += escape_estr(entry['code'])
+        line += escape_estr(clean_str(entry['code']))
         line += ' '
-        line += escape_estr(entry['title'].rstrip(' .\t\n'))
+        line += escape_estr(clean_str(entry['title']))
 
         if entry['params']:
             for k, v in sorted(entry['params'].items()):
@@ -45,7 +49,7 @@ def output_eldoc(entries):
                 line += ' '
                 if v is not None:
                     # take first line/sentence of description only
-                    v = v.split('\n', 1)[0].split('. ', 1)[0].rstrip(' .\t\n')
+                    v = clean_str(v.split('\n', 1)[0].split('. ', 1)[0])
                 line += escape_estr(v)
 
         line += ')'
