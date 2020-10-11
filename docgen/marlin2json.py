@@ -151,7 +151,7 @@ def parse_entry(path):
                     param['tag'].remove(tag)
             for i, e in enumerate(param['tag']):
                 e = e.upper()
-                if e.upper() != param['tag'][i]:
+                if e != param['tag'][i]:
                     print('warning: {} fixing lower-case parameter {}'.format(path, e), file=sys.stderr)
                     param['tag'][i] = e
 
