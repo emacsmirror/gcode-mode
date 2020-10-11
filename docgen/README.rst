@@ -84,8 +84,8 @@ Improving extraction of the RepRap documentation to include arguments
 would be a boon. To do this, cooperation with the RepRap Wiki community
 should probably be the way to go. If we could switch slowly to
 consistent formatting one instruction at-a-time (using a macro, for
-example) would allow improved descriptions across the board instead of
-relying on hand-editing and local overrides.
+example) we would allow improved descriptions across the board instead
+of relying on hand-editing and local overrides.
 
 
 .. _RepRap Wiki: https://reprap.org/wiki/G-code
