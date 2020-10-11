@@ -130,6 +130,30 @@ def parse_entry(path):
     # fixup parameters to always be a list
     if ret.get('parameters') is None:
         ret['parameters'] = []
+    else:
+        # check for empty parameters
+        filtered = list(filter(lambda x: x is not None, ret['parameters']))
+        if len(filtered) != len(ret['parameters']):
+            print('warning: {} containts empty parameter node'.format(path), file=sys.stderr)
+            ret['parameters'] = filtered
+
+        # fixup tag to always be a list like 'codes'
+        for param in filtered:
+            if isinstance(param['tag'], str):
+                tag = param['tag']
+                tags = list(map(lambda x: x.strip(), re.split(r'[\s,]+', tag)))
+                if len(tags) != 1:
+                    print('warning: {} unpacking multiple parameters "{}" into {}'.format(path, tag, tags), file=sys.stderr)
+                param['tag'] = tags
+            for tag in param['tag']:
+                if len(tag) != 1:
+                    print('warning: {} unsupported parameter "{}", ignoring'.format(path, tag), file=sys.stderr)
+                    param['tag'].remove(tag)
+            for i, e in enumerate(param['tag']):
+                e = e.upper()
+                if e.upper() != param['tag'][i]:
+                    print('warning: {} fixing lower-case parameter {}'.format(path, e), file=sys.stderr)
+                    param['tag'][i] = e
 
     # kill codes with parameters
     for code in ret['codes']:

@@ -9,9 +9,10 @@ def normalize_json(data):
     ret = []
     buf = {'title': data['data']['title'], 'params': {}}
 
-    # extract parameters
+    # extract and unbundle parameters
     for param in data['data']['parameters']:
-        buf['params'][param['tag']] = param.get('description')
+        for tag in param['tag']:
+            buf['params'][tag] = param.get('description')
 
     # unbundle compound documentation
     for code in data['data']['codes']:
