@@ -110,9 +110,9 @@
 
 (defun gcode-mode--doc-format (_instr entries param)
   "Format the retrieved documentation entry/es for display."
-  (let ((entry (first entries))) ; TODO: display/select multiple candidates
-    (let* ((title (first entry))
-	   (params (rest entry))
+  (let ((entry (car entries))) ; TODO: display/select multiple candidates
+    (let* ((title (car entry))
+	   (params (cdr entry))
 	   (param-desc (when param (plist-get params (string-to-char param))))
 	   (param-list (unless param-desc (gcode-mode--params-list params))))
       (let ((docstring title))
