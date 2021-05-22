@@ -158,9 +158,10 @@
 	      ;; fetch current parameter
 	      (goto-char pos)
 	      (when (and (> pos args-pos)
-			 (not (nth 4 (syntax-ppss)))
-			 (looking-back "\\_<\\([A-Z]\\)\\S-*" args-pos))
-		(setq param (match-string-no-properties 1)))
+			 (not (nth 4 (syntax-ppss))))
+		(skip-syntax-backward "^ ")
+		(when (looking-at "\\([A-Z]\\)\\S-*")
+		  (setq param (match-string-no-properties 1))))
 	      ;; return final documentation
 	      (list (gcode-mode--doc-format instr entries param)
 		    :thing instr :face face))))))))
