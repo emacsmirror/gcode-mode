@@ -196,6 +196,10 @@
   (modify-syntax-entry ?\; "<")
   (modify-syntax-entry ?\n ">")
 
+  ;; also setup comment-start/end to support newcomment/hs-minor-mode
+  (setq-local comment-start "; "
+              comment-end "")
+
   (font-lock-add-keywords
    nil
    '(;; line numbers
