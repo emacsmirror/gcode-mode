@@ -192,17 +192,15 @@
 (define-derived-mode gcode-mode prog-mode "G-Code"
   "Major mode for G-Code instructions."
 
-  ;; handle comments with syntax-table
-  (modify-syntax-entry ?\; "<")
-  (modify-syntax-entry ?\n ">")
-
-  ;; also setup comment-start/end to support newcomment/hs-minor-mode
+  ;; handle comments
   (setq-local comment-start "; "
               comment-end "")
 
   (font-lock-add-keywords
    nil
-   '(;; line numbers
+   '(;; comments
+     (";[^\n]*" . 'font-lock-comment-face)
+     ;; line numbers
      ("^\\s-*\\(N[0-9]+\\)\\_>" (1 'gcode-mode-line-number-face))
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
