@@ -44,42 +44,42 @@
 
 ;; Customizable faces
 (defgroup gcode-mode-faces nil
-  "Faces used in gcode-mode"
+  "Faces used in `gcode-mode'."
   :group 'faces)
 
 (defface gcode-mode-line-number-face
   '((t :inherit font-lock-preprocessor-face))
-  "Face used for line numbers"
+  "Face used for line numbers."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-checksum-face
   '((t :inherit font-lock-preprocessor-face))
-  "Face used for checksums"
+  "Face used for checksums."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-gcode-face
   '((t :inherit font-lock-builtin-face))
-  "Face used for main G-Code instructions"
+  "Face used for main G-Code instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-mcode-face
   '((t :inherit font-lock-keyword-face))
-  "Face used for main M-Code instructions"
+  "Face used for main M-Code instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-dcode-face
   '((t :inherit font-lock-warning-face))
-  "Face used for main D-Code instructions"
+  "Face used for main D-Code instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-subtype-face
   '((t :weight bold))
-  "Face used for highlighting subtypes of the form GX.Y"
+  "Face used for highlighting subtypes of the form \"GX.Y\"."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-argument-face
   '((t :inherit font-lock-variable-name-face))
-  "Face used for G-Code argument names"
+  "Face used for G-Code argument names."
   :group 'gcode-mode-faces)
 
 
