@@ -55,7 +55,7 @@ def output_eldoc(entries):
 
         line += ')'
         print(line)
-    print('))')
+    print("))\n\n(provide 'gcode-mode-doc)")
 
 
 def main():

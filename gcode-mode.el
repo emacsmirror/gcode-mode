@@ -83,9 +83,8 @@
   :group 'gcode-mode-faces)
 
 
-;; Documentation table generation
-(autoload 'gcode-mode--doc-entries "gcode-mode-doc"
-  "Return G-Code documentation entries.")
+;; Lazy documentation table generation
+(declare-function gcode-mode--doc-entries "gcode-mode-doc")
 
 (defvar gcode-mode--doc-hash nil
   "G-Code documentation table (lazy-built by `gcode-mode--doc-build').")
@@ -93,6 +92,9 @@
 (defun gcode-mode--doc-build ()
   "Populate G-Code documentation hash table."
   (unless gcode-mode--doc-hash
+    (require 'gcode-mode-doc)
+
+    ;; populate the hash table
     (let ((hash (make-hash-table :test 'equal)))
       (dolist (entry (gcode-mode--doc-entries))
 	(let ((code (car entry))
@@ -100,7 +102,10 @@
 	  (let ((def-list (gethash code hash)))
 	    (push def def-list)
 	    (puthash code def-list hash))))
-      (setq gcode-mode--doc-hash hash))))
+      (setq gcode-mode--doc-hash hash))
+
+    ;; unload gcode-mode-doc
+    (unload-feature 'gcode-mode-doc)))
 
 
 ;; Documentation formatting

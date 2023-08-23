@@ -484,3 +484,5 @@
   ("T5" "Select Tool")
   ("T6" "Select Tool")
 ))
+
+(provide 'gcode-mode-doc)
