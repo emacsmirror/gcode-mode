@@ -147,7 +147,7 @@
   (save-excursion
     (let ((pos (point)))
       (beginning-of-line)
-      (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
+      (when (looking-at "^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTDP]-?\\)0*\\([0-9]+\\)\\(\\.[0-9]*\\)?\\_>")
 	(let* ((args-pos (match-end 0))
 	       (code (concat (match-string-no-properties 1) (match-string-no-properties 2)))
 	       (subtype (replace-regexp-in-string "0+$" "" (or (match-string-no-properties 3) "")))
@@ -210,7 +210,7 @@
      ;; checksums
      ("\\(\\*[0-9]+\\)\\s-*\\(?:$\\|\\s<\\)" (1 'gcode-mode-checksum-face))
      ;; instructions + subtype
-     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTD]-?[0-9]+\\(\\.[0-9]*\\)?\\)\\_>"
+     ("^\\s-*\\(?:N[0-9]+\\s-+\\)?\\([GMTDP]-?[0-9]+\\(\\.[0-9]*\\)?\\)\\_>"
       (1 (gcode-mode--instr-face (match-string-no-properties 1)))
       (2 'gcode-mode-subtype-face prepend t)
       ;; arguments
