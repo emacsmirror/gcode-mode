@@ -59,17 +59,22 @@
 
 (defface gcode-mode-gcode-face
   '((t :inherit font-lock-builtin-face))
-  "Face used for main G-Code instructions."
+  "Face used for main G-Code (move) instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-mcode-face
   '((t :inherit font-lock-keyword-face))
-  "Face used for main M-Code instructions."
+  "Face used for main M-Code (machine) instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-dcode-face
   '((t :inherit font-lock-warning-face))
-  "Face used for main D-Code instructions."
+  "Face used for main D-Code (debug) instructions."
+  :group 'gcode-mode-faces)
+
+(defface gcode-mode-tcode-face
+  '((t :inherit font-lock-preprocessor-face))
+  "Face used for main T/P (tool) instructions."
   :group 'gcode-mode-faces)
 
 (defface gcode-mode-subtype-face
@@ -140,6 +145,8 @@
   (let ((code (string-to-char instr)))
     (cond ((equal ?M code) 'gcode-mode-mcode-face)
 	  ((equal ?D code) 'gcode-mode-dcode-face)
+	  ((equal ?T code) 'gcode-mode-tcode-face)
+	  ((equal ?P code) 'gcode-mode-tcode-face)
 	  (t 'gcode-mode-gcode-face))))
 
 (defun gcode-mode--eldoc-core ()
