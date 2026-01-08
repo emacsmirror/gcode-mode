@@ -416,6 +416,7 @@ M862.3	Model name
 M862.4	Firmware version
 M862.5	Gcode level
 M871	PTC Configuration
+M870	Control Chamber vents
 M876	Dialog handling
 M890	Run User Gcode
 M900	Set Linear Advance Scaling Factors
@@ -470,3 +471,4 @@ D81	Bed analysis
 D106	Print measured fan speed for different pwm values
 D2130	Trinamic stepper controller
 D9125	PAT9125 filament sensor
+P0	Park tool
