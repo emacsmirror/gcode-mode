@@ -98,7 +98,16 @@ def main():
                     entries.append(entry)
 
     # sort entries to be more VCS friendly
-    entries = sorted(entries, key=lambda x: (x['code'][0], float(x['code'][1:]), x['title']))
+    def key_fn(entry):
+        keys = [entry['code'][0], entry['code'][1:], entry['title']]
+        try:
+            keys[1] = float(keys[1])
+        except ValueError:
+            # support broken gcode of the form G[chars]
+            keys[1] = sum(map(ord, keys[1]))
+        return keys
+
+    entries = sorted(entries, key=key_fn)
     output_eldoc(entries)
 
 
