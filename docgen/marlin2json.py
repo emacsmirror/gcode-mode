@@ -22,72 +22,93 @@ def ht2text(html):
     return text
 
 
-class PlainTextRenderer(mistune.AstRenderer):
+class PlainTextRenderer(mistune.BaseRenderer):
     def __init__(self, strip_link_pair=['/docs/gcode/', '.html']):
         super(PlainTextRenderer, self).__init__()
         self.strip_link_pair = strip_link_pair
+        self._depth = 0
+
+    def render_token(self, token, state):
+        # backward compitable with v2
+        func = self._get_method(token["type"])
+        attrs = token.get("attrs")
+
+        if "raw" in token:
+            text = token["raw"]
+        elif "children" in token:
+            text = self.render_tokens(token["children"], state)
+        else:
+            if attrs:
+                return func(**attrs)
+            else:
+                return func()
+        if attrs:
+            return func(text, **attrs)
+        else:
+            return func(text)
 
     def text(self, text):
-        return ''.join(text)
+        return text
 
     def paragraph(self, text):
-        return ''.join(text)
+        return text
 
     def inline_html(self, text):
-        return ht2text(''.join(text))
+        return ht2text(text)
 
     def block_text(self, text):
-        return ''.join(text)
+        return text
 
     def block_code(self, text):
-        return ''.join(text)
+        return text
 
     def block_quote(self, text):
-        return ''.join(text)
+        return text
 
     def codespan(self, text):
-        return ''.join(text)
+        return text
 
-    def newline(self):
+    def blank_line(self):
         return '\n'
 
-    def linebreak(self):
-        return '\n'
+    def softbreak(self):
+        return ' '
 
     def emphasis(self, text):
-        return '_' + ''.join(text) + '_'
+        return '_' + text + '_'
 
     def strong(self, text):
-        return '*' + ''.join(text) + '*'
+        return '*' + text + '*'
 
-    def link(self, link, children=None, title=None):
+    def link(self, text, url):
+        if text is not None:
+            return text
+        else:
+            prefix, suffix = self.strip_link_pair
+            if url.startswith(prefix) and url.endswith(suffix):
+                url = url[len(prefix):-len(suffix)]
+            return url
+
+    def image(self, text, url, title=None):
         if title is not None:
             return title
         else:
-            prefix, suffix = self.strip_link_pair
-            if link.startswith(prefix) and link.endswith(suffix):
-                link = link[len(prefix):-len(suffix)]
-            return link
+            return text
 
-    def heading(self, children, level):
-        return '#' * level + ' ' + ''.join(children)
+    def heading(self, text, level):
+        return '#' * level + ' ' + text
 
-    def list_item(self, children, level):
-        return '' * level + ''.join(children)
+    def list_item(self, text):
+        return ' ' * self._depth + '- ' + text
 
-    def list(self, children, ordered, level, start=None):
-        n = 0
-        res = []
-        for child in children:
-            pref = '-' if not ordered else str(n)
-            res.append(pref + ' ' + child)
-        return '\n'.join(res)
+    def list(self, text, ordered, depth, start=None):
+        self._depth = depth
+        return '\n' + text
 
 
 def md2text(text):
     markdown = mistune.Markdown(renderer=PlainTextRenderer())
-    ret = markdown(text)
-    return '\n\n'.join(ret)
+    return markdown(text)
 
 
 def md2text_deep(data):
